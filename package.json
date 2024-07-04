@@ -1,0 +1,60 @@
+{
+  "name": "sevio-react-sdk",
+  "version": "1.0.0",
+  "description": "A 3rd-party react sdk for integrating Sevio advertisements.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist/**/*"
+  ],
+  "scripts": {
+    "prepare": "husky install",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "prepublishOnly": "npm run build",
+    "lint": "eslint 'src/**/*.{ts,tsx}'",
+    "lint:fix": "eslint 'src/**/*.{ts,tsx}' --fix",
+    "format": "prettier --write 'src/**/*.{ts,tsx,js,jsx,json,css,md}'"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run format && npm run lint && npm run build",
+      "pre-push": "npm run format && npm run lint && npm run build"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ChristianTucker/sevio-react-sdk.git"
+  },
+  "keywords": [
+    "Sevio",
+    "React",
+    "SDK",
+    "Advertisements"
+  ],
+  "author": "Christian Tucker <christian.tucker@outlook.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ChristianTucker/sevio-react-sdk/issues"
+  },
+  "homepage": "https://github.com/ChristianTucker/sevio-react-sdk#readme",
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@typescript-eslint/eslint-plugin": "^7.15.0",
+    "@typescript-eslint/parser": "^7.15.0",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.1.3",
+    "eslint-plugin-react": "^7.34.3",
+    "eslint-plugin-react-hooks": "^4.6.2",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.7",
+    "prettier": "^3.3.2",
+    "typescript": "^5.5.3"
+  }
+}
