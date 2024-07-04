@@ -14,12 +14,12 @@
     "prepublishOnly": "npm run build",
     "lint": "eslint 'src/**/*.{ts,tsx}'",
     "lint:fix": "eslint 'src/**/*.{ts,tsx}' --fix",
-    "format": "prettier --write 'src/**/*.{ts,tsx,js,jsx,json,css,md}'"
+    "format": "prettier --write 'src/**/*.{ts,tsx,js,jsx,json,css,md}'",
+    "prepush": "npm run format && npm run lint && npm run build"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run format && npm run lint && npm run build",
-      "pre-push": "npm run format && npm run lint && npm run build"
+      "pre-push": "npm run prepush"
     }
   },
   "repository": {

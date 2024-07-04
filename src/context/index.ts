@@ -1,2 +1,1 @@
-export { SevioProvider } from './SevioProvider'
-
+export { SevioProvider } from './SevioProvider';

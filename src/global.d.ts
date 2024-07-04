@@ -1,8 +1,7 @@
-import {SevioAdvertisement} from "./context/types";
+import { SevioAdvertisement } from './context/types';
 
 declare global {
-    interface Window {
-        sevioads: SevioAdvertisement[][];
-    }
+  interface Window {
+    sevioads: SevioAdvertisement[][];
+  }
 }
-

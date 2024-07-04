@@ -1,27 +1,29 @@
-import React from "react";
+import React from 'react';
 
 export enum AdType {
-    Native = 'native',
-    Banner = 'banner',
+  Native = 'native',
+  Banner = 'banner',
 }
 
 interface CommonSevioProperties {
-    accountId: string;
-    inventoryId: string;
+  accountId: string;
+  inventoryId: string;
 }
 
 export interface SevioProviderProps extends CommonSevioProperties {
-    debug?: boolean;
+  debug?: boolean;
 }
 
 export interface SevioAdvertisement extends CommonSevioProperties {
-    zone: string;
-    adType: AdType
+  zone: string;
+  adType: AdType;
 }
 
 export interface SevioContextProps extends CommonSevioProperties {
-    initialized: boolean;
-    advertisements: SevioAdvertisement[][];
-    setAdvertisements: React.Dispatch<React.SetStateAction<SevioAdvertisement[][]>>;
-    refreshZone: (zone: string) => void
+  initialized: boolean;
+  advertisements: SevioAdvertisement[][];
+  setAdvertisements: React.Dispatch<
+    React.SetStateAction<SevioAdvertisement[][]>
+  >;
+  refreshZone: (adType: AdType, zone: string) => void;
 }

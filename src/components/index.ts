@@ -1,1 +1,1 @@
-export { SevioAdvertisement } from './SevioAdvertisement'
+export { SevioAdvertisement } from './SevioAdvertisement';
