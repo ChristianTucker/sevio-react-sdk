@@ -1,15 +1,15 @@
 
 # Sevio React SDK
 
-This is a third-party React client SDK for integrating [Sevio](https://sevio.com/) into your React applications. The SDK provides components and hooks to easily manage and display advertisements using Sevio's services.
+This is a **unofficial third-party** React client SDK for integrating [Sevio](https://sevio.com/) into your React applications. The SDK provides components and hooks to easily manage and display advertisements using Sevio's services.
 
 ## Installation
 
 Install the SDK via npm:
 
 ```bash
-npm install sevio-react-sdk
-```
+npm install git+https://github.com/ChristianTucker/sevio-react-sdk
+````
 
 ## Getting Started
 
@@ -33,24 +33,16 @@ ReactDOM.render(<App />, document.getElementById('root'));
 
 ### Using the `useSevio` Hook
 
-The `useSevio` hook can be used to access Sevio context properties within your components. It provides access to various properties and methods to manage advertisements. You will likely `not need` any of these functions besides possibly `refreshZone` for custom use-cases; However please check with Sevio if you should be manually refreshing zones first. The `<SevioAdvertisement ...>` component below handles managing advertisement state for you.
+The `useSevio` hook can be used to access Sevio context properties within your components. It provides access to various properties and methods to manage advertisements. However, this hook will likely go unused as advertisement state is managed automagically by the `<SevioAdvertisement>` component. `refreshZone` is only used in cases where you need direct control over advertisement refreshing, make sure to verify your use case with Sevio first, most people do not need this and it may get your account disabled if you abuse it.
 
 ```jsx
 import React from 'react';
 import { useSevio } from 'sevio-react-sdk/hooks';
 
 const MyComponent = () => {
-  const { initialized, advertisements, setAdvertisements, refreshZone } = useSevio();
-
-  if (!initialized) {
-    return <div>Loading...</div>;
-  }
-
-  return (
-    <div>
-      {/* Render your advertisements or other content */}
-    </div>
-  );
+  const { initialized, advertisements, setAdvertisements, refreshZone, debugEnabled } = useSevio();
+  // ...
+  return ( ... );
 };
 ```
 
@@ -58,12 +50,11 @@ const MyComponent = () => {
 
 The `SevioContextProps` interface extends common Sevio properties and includes the following:
 
-- `accountId: string`: The accountId provided by Sevio
-- `inventoryId: string`: The inventoryId provided by Sevio
 - `initialized: boolean`: Indicates if the SDK is initialized.
-- `advertisements: SevioAdvertisement[][]`: A 2D array of advertisements.
-- `setAdvertisements: React.Dispatch<React.SetStateAction<SevioAdvertisement[][]>>`: Function to update advertisements.
+- `advertisements: SevioPlacement[][]`: A 2D array of advertisements.
+- `setAdvertisements: React.Dispatch<React.SetStateAction<SevioPlacement[][]>>`: Function to update advertisements.
 - `refreshZone: (adType: AdType, zone: string) => void`: Function to refresh advertisements in a specific zone.
+- `debugEnabled?: boolean`: Optional debug mode.
 
 ### Advertisement Component
 
@@ -88,18 +79,17 @@ Props:
 
 - `accountId: string`: Your Sevio account ID.
 - `inventoryId: string`: Your Sevio inventory ID.
-- `debug?: boolean`: Optional. Enable debug mode.
+- `debugEnabled?: boolean`: Optional. Enable debug mode.
 
 ### `useSevio`
 
 Returns `SevioContextProps`:
 
-- `accountId: string` Your Sevio account ID.
-- `inventoryId: string` Your Sevio inventory ID.
 - `initialized: boolean`
-- `advertisements: SevioAdvertisement[][]`
-- `setAdvertisements: React.Dispatch<React.SetStateAction<SevioAdvertisement[][]>>`
+- `advertisements: SevioPlacement[][]`
+- `setAdvertisements: React.Dispatch<React.SetStateAction<SevioPlacement[][]>>`
 - `refreshZone: (adType: AdType, zone: string) => void`
+- `debugEnabled?: boolean`
 
 ### `SevioAdvertisement`
 
@@ -118,30 +108,15 @@ Here is a complete example of how to use the Sevio SDK in a React application:
 ```jsx
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { SevioProvider, SevioAdvertisement, useSevio } from 'sevio-react-sdk';
+import { SevioProvider, SevioAdvertisement } from 'sevio-react-sdk';
 
 const AdSection = () => {
-  const { initialized, advertisements, refreshZone } = useSevio();
-
-  if (!initialized) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <div>
-      {advertisements.map((adRow, index) => (
-        <div key={index}>
-          {adRow.map((ad, idx) => (
-            <SevioAdvertisement
-              key={idx}
-              accountId={ad.accountId}
-              inventoryId={ad.inventoryId}
-              zone={ad.zone}
-              adType={ad.adType}
-            />
-          ))}
-        </div>
-      ))}
+        <SevioAdvertisement
+          zone={"<INSERT_ZONE_ID>"}
+          adType={AdType.Banner}
+        />
     </div>
   );
 };
@@ -165,4 +140,8 @@ Contributions are welcome! Please open an issue or submit a pull request for any
 
 ## Contact
 
-For any questions or support, please contact [support@sevio.com](mailto:support@sevio.com).
+For any questions or support with this SDK, please create an issue.
+
+For any questions or support with sevio, please contact [support@sevio.com](mailto:support@sevio.com).
+
+

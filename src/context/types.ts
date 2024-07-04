@@ -11,19 +11,20 @@ interface CommonSevioProperties {
 }
 
 export interface SevioProviderProps extends CommonSevioProperties {
-  debug?: boolean;
+  debugEnabled?: boolean;
 }
 
-export interface SevioAdvertisement extends CommonSevioProperties {
+export interface SevioAdvertisement {
   zone: string;
   adType: AdType;
 }
 
+export type SevioPlacement = CommonSevioProperties & SevioAdvertisement;
+
 export interface SevioContextProps extends CommonSevioProperties {
   initialized: boolean;
-  advertisements: SevioAdvertisement[][];
-  setAdvertisements: React.Dispatch<
-    React.SetStateAction<SevioAdvertisement[][]>
-  >;
+  advertisements: SevioPlacement[][];
+  setAdvertisements: React.Dispatch<React.SetStateAction<SevioPlacement[][]>>;
   refreshZone: (adType: AdType, zone: string) => void;
+  debugEnabled?: boolean;
 }

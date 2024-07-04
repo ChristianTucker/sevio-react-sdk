@@ -2,8 +2,8 @@ import React from 'react';
 import { createContext, PropsWithChildren, useEffect, useState } from 'react';
 import {
   AdType,
-  SevioAdvertisement,
   SevioContextProps,
+  SevioPlacement,
   SevioProviderProps,
 } from './types';
 import {
@@ -19,15 +19,13 @@ export const SevioContext = createContext<SevioContextProps | undefined>(
 export function SevioProvider({
   accountId,
   inventoryId,
-  debug,
+  debugEnabled,
   children,
 }: PropsWithChildren<SevioProviderProps>) {
   // RATHER OR NOT THE SEVIO LOADER HAS BEEN INITIALIZED
   const [initialized, setInitialized] = useState<boolean>(false);
   // THE CURRENT ADVERTISEMENTS
-  const [advertisements, setAdvertisements] = useState<SevioAdvertisement[][]>(
-    []
-  );
+  const [advertisements, setAdvertisements] = useState<SevioPlacement[][]>([]);
 
   // VALIDATE PROPS
   if (!accountId)
@@ -48,7 +46,8 @@ export function SevioProvider({
 
     // WAIT FOR THE SCRIPT TO LOAD
     script.onload = () => {
-      if (debug) console.log('[DEBUG]: Sevioads loader successfully injected.');
+      if (debugEnabled)
+        console.log('[DEBUG]: Sevioads loader successfully injected.');
       // SET CURRENT ADVERTISEMENTS BASED ON window.sevioads IN THE EVENT INTERNAL CACHING OCCURS.
       setAdvertisements(window.sevioads ?? []);
       // SET INITIALIZED STATE TO TRUE, THIS WILL ALLOW ADVERTISEMENTS TO RENDER.
@@ -79,16 +78,21 @@ export function SevioProvider({
 
   // IMPLEMENT ZONE REFRESHING
   const refreshZone = (adType: AdType, zone: string): void => {
-    const zoneExists = doesAdvertisementExist(advertisements, zone, adType);
+    const zoneExists = doesAdvertisementExist(
+      advertisements,
+      zone,
+      adType,
+      debugEnabled
+    );
     if (!zoneExists)
       throw new Error(`Cannot refresh zone (${zone}) as it does not exist.`);
     const placement = { accountId, inventoryId, zone, adType };
     setAdvertisements((advertisements) =>
-      removePlacement(advertisements, placement)
+      removePlacement(advertisements, placement, debugEnabled)
     );
     setTimeout(() => {
       setAdvertisements((advertisements) =>
-        pushPlacement(advertisements, placement)
+        pushPlacement(advertisements, placement, debugEnabled)
       );
     }, 500);
   };
@@ -102,6 +106,7 @@ export function SevioProvider({
         advertisements,
         setAdvertisements,
         refreshZone,
+        debugEnabled,
       }}
     >
       {children}
