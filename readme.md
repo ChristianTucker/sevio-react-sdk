@@ -3,6 +3,24 @@
 
 This is a **unofficial third-party** React client SDK for integrating [Sevio](https://sevio.com/) into your React applications. The SDK provides components and hooks to easily manage and display advertisements using Sevio's services.
 
+## Table of Contents
+
+- [Installation](#installation)
+- [Getting Started](#getting-started)
+    - [Provider Setup](#provider-setup)
+    - [Using the `useSevio` Hook](#using-the-usesevio-hook)
+    - [Sevio Context Properties](#sevio-context-properties)
+    - [Advertisement Component](#advertisement-component)
+- [API Reference](#api-reference)
+    - [`SevioProvider`](#sevioprovider)
+    - [`useSevio`](#usesevio)
+    - [`SevioAdvertisement`](#sevioadvertisement)
+- [Example](#example)
+- [License](#license)
+- [Contributing](#contributing)
+- [Contact](#contact)
+
+
 ## Installation
 
 Install the SDK via npm:
