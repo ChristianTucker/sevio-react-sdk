@@ -23,8 +23,8 @@ export type SevioPlacement = CommonSevioProperties & SevioAdvertisement;
 
 export interface SevioContextProps extends CommonSevioProperties {
   initialized: boolean;
-  advertisements: SevioPlacement[][];
-  setAdvertisements: React.Dispatch<React.SetStateAction<SevioPlacement[][]>>;
-  refreshZone: (adType: AdType, zone: string) => void;
+  advertisements: SevioAdvertisement[];
+  setAdvertisements: (value: (((prevState: (SevioAdvertisement[])) => (SevioAdvertisement[])) | (SevioAdvertisement[]))) => void
   debugEnabled?: boolean;
+
 }

@@ -1,16 +1,9 @@
-import React from 'react';
-import { createContext, PropsWithChildren, useEffect, useState } from 'react';
+import React, { createContext, PropsWithChildren, useEffect, useState } from 'react';
 import {
-  AdType,
+  SevioAdvertisement,
   SevioContextProps,
-  SevioPlacement,
   SevioProviderProps,
 } from './types';
-import {
-  doesAdvertisementExist,
-  pushPlacement,
-  removePlacement,
-} from '../utils';
 
 export const SevioContext = createContext<SevioContextProps | undefined>(
   undefined
@@ -24,8 +17,18 @@ export function SevioProvider({
 }: PropsWithChildren<SevioProviderProps>) {
   // RATHER OR NOT THE SEVIO LOADER HAS BEEN INITIALIZED
   const [initialized, setInitialized] = useState<boolean>(false);
-  // THE CURRENT ADVERTISEMENTS
-  const [advertisements, setAdvertisements] = useState<SevioPlacement[][]>([]);
+  // COLLECTION OF CURRENTLY ACTIVE ADVERTISEMENTS
+  const [advertisements, setAdvertisements] = useState<SevioAdvertisement[]>([]);
+
+  // WHENEVER ADVERTISEMENTS CHANGE, PUSH A NEW CONFIG TO SEVIO.
+  useEffect(() => {
+    if(!initialized) return;
+    const placements = advertisements.map(advertisement => ({ ...advertisement, inventoryId, accountId }))
+
+    console.log('Initialized', initialized, 'Sevioads', window.sevioads);
+
+    window.sevioads.push(placements);
+  }, [initialized, advertisements]);
 
   // VALIDATE PROPS
   if (!accountId)
@@ -48,8 +51,10 @@ export function SevioProvider({
     script.onload = () => {
       if (debugEnabled)
         console.log('[DEBUG]: Sevioads loader successfully injected.');
-      // SET CURRENT ADVERTISEMENTS BASED ON window.sevioads IN THE EVENT INTERNAL CACHING OCCURS.
-      setAdvertisements(window.sevioads ?? []);
+
+      // DEFAULT THE INITIAL STATE TO PREVENT RACE CONDITIONS
+      window.sevioads = window.sevioads ?? [];
+
       // SET INITIALIZED STATE TO TRUE, THIS WILL ALLOW ADVERTISEMENTS TO RENDER.
       setInitialized(true);
     };
@@ -71,31 +76,6 @@ export function SevioProvider({
     };
   }, []);
 
-  // WHENEVER LOCAL advertisements STATE CHANGES WE NEED TO UPDATE window.sevioads
-  useEffect(() => {
-    window.sevioads = advertisements;
-  }, [advertisements]);
-
-  // IMPLEMENT ZONE REFRESHING
-  const refreshZone = (adType: AdType, zone: string): void => {
-    const zoneExists = doesAdvertisementExist(
-      advertisements,
-      zone,
-      adType,
-      debugEnabled
-    );
-    if (!zoneExists)
-      throw new Error(`Cannot refresh zone (${zone}) as it does not exist.`);
-    const placement = { accountId, inventoryId, zone, adType };
-    setAdvertisements((advertisements) =>
-      removePlacement(advertisements, placement, debugEnabled)
-    );
-    setTimeout(() => {
-      setAdvertisements((advertisements) =>
-        pushPlacement(advertisements, placement, debugEnabled)
-      );
-    }, 500);
-  };
 
   return (
     <SevioContext.Provider
@@ -105,7 +85,6 @@ export function SevioProvider({
         inventoryId,
         advertisements,
         setAdvertisements,
-        refreshZone,
         debugEnabled,
       }}
     >

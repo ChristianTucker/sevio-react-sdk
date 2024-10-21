@@ -1,4 +1,4 @@
-import { AdType, SevioAdvertisement, SevioPlacement } from '../context/types';
+import { AdType, SevioAdvertisement } from '../context/types';
 
 /**
  * Checks to see if an advertisement for the given zone and adType exists.
@@ -6,28 +6,27 @@ import { AdType, SevioAdvertisement, SevioPlacement } from '../context/types';
  * @param advertisements The current advertisement state.
  * @param zone The zone string of the advertisement.
  * @param adType The type of advertisement.
+ * @param debugEnabled Rather or not to print debug messages
  * @returns boolean
  */
 export function doesAdvertisementExist(
-  advertisements: SevioPlacement[][],
+  advertisements: SevioAdvertisement[],
   zone: string,
   adType: AdType,
   debugEnabled?: boolean
 ) {
   if (debugEnabled)
     console.log(`[DEBUG]: Checking if placement exists for zone (${zone})`);
-  let exists = false;
-  for (const innerArray of advertisements) {
-    exists = !!innerArray.find(
-      (ad) => ad.zone === zone && ad.adType === adType
-    );
-    if (exists) {
-      if (debugEnabled) console.log(`[DEBUG]: Zone (${zone}) exists in state.`);
-      return true;
-    }
+
+  const exists = advertisements.find((ad) => ad.zone === zone && ad.adType === adType);
+  if (exists) {
+    if (debugEnabled) console.log(`[DEBUG]: Zone (${zone}) exists in state.`);
+    return true;
   }
+
   if (debugEnabled)
     console.log(`[DEBUG]: Zone (${zone}) does not exist in state.`);
+
   return false;
 }
 
@@ -39,12 +38,14 @@ export function doesAdvertisementExist(
  * @param debugEnabled Rather or not to print debug messages to console.
  */
 export function pushPlacement(
-  advertisements: SevioPlacement[][],
-  placement: SevioPlacement,
+  advertisements: SevioAdvertisement[],
+  placement: SevioAdvertisement,
   debugEnabled?: boolean
-) {
-  if (debugEnabled)
+): SevioAdvertisement[] {
+  if (debugEnabled) {
+    console.log('[DEBUG]: Current state:', advertisements);
     console.log('[DEBUG]: Removing placement from state:', placement);
+  }
   if (
     doesAdvertisementExist(advertisements, placement.zone, placement.adType)
   ) {
@@ -53,7 +54,7 @@ export function pushPlacement(
     );
   }
   const copy = structuredClone(advertisements);
-  copy.push([placement]);
+  copy.push(placement);
   if (debugEnabled)
     console.log('[DEBUG]: New state after adding placement:', copy);
   return copy;
@@ -67,19 +68,15 @@ export function pushPlacement(
  * @param debugEnabled Rather or not to print debug messages to console.
  */
 export function removePlacement(
-  advertisements: SevioPlacement[][],
+  advertisements: SevioAdvertisement[],
   placement: SevioAdvertisement,
   debugEnabled?: boolean
-) {
+): SevioAdvertisement[] {
   if (debugEnabled)
     console.log('[DEBUG]: Removing placement from state:', placement);
-  const copy = structuredClone(advertisements);
-  for (let i = 0; i < copy.length; i++) {
-    copy[i] = copy[i].filter(
-      (ad) => ad.zone !== placement.zone && ad.adType !== placement.adType
-    );
-  }
+  let clone = structuredClone(advertisements);
+  clone = clone.filter((ad) => ad.zone !== placement.zone && ad.adType !== placement.adType);
   if (debugEnabled)
-    console.log('[DEBUG]: New state after removing placement:', copy);
-  return copy;
+    console.log('[DEBUG]: New state after removing placement:', clone);
+  return clone;
 }

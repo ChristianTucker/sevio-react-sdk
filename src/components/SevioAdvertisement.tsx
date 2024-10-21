@@ -1,21 +1,20 @@
-import React from 'react';
-import { SevioAdvertisement, SevioPlacement } from '../context/types';
+import React, { useEffect } from 'react';
+import { SevioAdvertisement } from '../context/types';
 import { useSevio } from '../hooks';
-import { PropsWithChildren, useEffect } from 'react';
+import { PropsWithChildren } from 'react';
 import { pushPlacement, removePlacement } from '../utils';
 
 export function SevioAdvertisement({
-  adType,
   zone,
+  adType,
   children,
-}: PropsWithChildren<SevioAdvertisement>) {
-  const {
-    initialized,
-    accountId,
-    inventoryId,
-    setAdvertisements,
-    debugEnabled,
-  } = useSevio();
+  style
+}: PropsWithChildren<SevioAdvertisement & { style?: any }>) {
+  const { initialized, accountId, inventoryId, debugEnabled, setAdvertisements } = useSevio();
+  useEffect(() => {
+    if(!debugEnabled) return;
+    console.log(`[DEBUG]: SevioAdvertisement initialization set to (${initialized}) for zone (${zone})`)
+  }, [debugEnabled, initialized])
 
   useEffect(() => {
     // WAITING ON SEVIO LOADER
@@ -28,9 +27,7 @@ export function SevioAdvertisement({
       );
 
     // CREATE THE PLACEMENT
-    const placement: SevioPlacement = {
-      accountId,
-      inventoryId,
+    const placement: SevioAdvertisement = {
       adType,
       zone,
     };
@@ -40,7 +37,7 @@ export function SevioAdvertisement({
       return pushPlacement(advertisements, placement, debugEnabled);
     });
 
-    // WHEN THIS ADVERTISEMENT COMPONENT IS UNMOUNTED, REMOVE THE ZONE FROM THE advertisements STATE
+    // WHENEVER THIS ADVERTISEMENT COMPONENT IS UNMOUNTED, REMOVE THE ZONE FROM THE advertisements STATE
     return () => {
       setAdvertisements((advertisements) => {
         return removePlacement(advertisements, placement, debugEnabled);
@@ -53,7 +50,7 @@ export function SevioAdvertisement({
 
   // RENDER EMPTY COMPONENT WITH REQUIRED PROPERTIES TO BE PICKED UP BY THE SEVIO LOADER.
   return (
-    <div className={'sevioads'} data-zone={zone}>
+    <div className={'sevioads'} data-zone={zone} style={style}>
       {children}
     </div>
   );
