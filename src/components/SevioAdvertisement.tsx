@@ -8,8 +8,8 @@ export function SevioAdvertisement({
   zone,
   adType,
   children,
-  style
-}: PropsWithChildren<SevioAdvertisement & { style?: any }>) {
+  style, className
+}: PropsWithChildren<SevioAdvertisement & { style?: any, className?: string }>) {
   const { initialized, accountId, inventoryId, debugEnabled, setAdvertisements } = useSevio();
   useEffect(() => {
     if(!debugEnabled) return;
@@ -50,7 +50,7 @@ export function SevioAdvertisement({
 
   // RENDER EMPTY COMPONENT WITH REQUIRED PROPERTIES TO BE PICKED UP BY THE SEVIO LOADER.
   return (
-    <div className={'sevioads'} data-zone={zone} style={style}>
+    <div className={`sevioads ${className}`} data-zone={zone} style={style}>
       {children}
     </div>
   );

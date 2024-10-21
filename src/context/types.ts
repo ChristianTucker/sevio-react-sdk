@@ -25,6 +25,6 @@ export interface SevioContextProps extends CommonSevioProperties {
   initialized: boolean;
   advertisements: SevioAdvertisement[];
   setAdvertisements: (value: (((prevState: (SevioAdvertisement[])) => (SevioAdvertisement[])) | (SevioAdvertisement[]))) => void
+  refreshZone: (zone: string) => void
   debugEnabled?: boolean;
-
 }

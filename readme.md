@@ -71,7 +71,7 @@ The `SevioContextProps` interface extends common Sevio properties and includes t
 - `initialized: boolean`: Indicates if the SDK is initialized.
 - `advertisements: SevioPlacement[][]`: A 2D array of advertisements.
 - `setAdvertisements: React.Dispatch<React.SetStateAction<SevioPlacement[][]>>`: Function to update advertisements.
-- `refreshZone: (adType: AdType, zone: string) => void`: Function to refresh advertisements in a specific zone.
+- `refreshZone: (zone: string) => void`: Function to refresh advertisements in a specific zone.
 - `debugEnabled?: boolean`: Optional debug mode.
 
 ### Advertisement Component
@@ -83,7 +83,7 @@ import React from 'react';
 import { SevioAdvertisement } from 'sevio-react-sdk/components';
 
 const AdComponent = () => (
-  <SevioAdvertisement accountId="your-account-id" inventoryId="your-inventory-id" zone="header" adType="banner">
+  <SevioAdvertisement zone="header" adType="banner">
     {/* Optional children components */}
   </SevioAdvertisement>
 );

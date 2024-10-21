@@ -77,6 +77,14 @@ export function SevioProvider({
   }, []);
 
 
+  // REFRESHES A SPECIFIC ZONE, BY PUSHING IT AGAIN.
+  const refreshZone = (zone: string) => {
+    const current = advertisements.find(ad => ad.zone === zone);
+    if(!current) throw new Error(`Cannot refresh non-existing zone: ${zone}`);
+    window.sevioads.push([{ ...current, inventoryId, accountId }]);
+  }
+
+
   return (
     <SevioContext.Provider
       value={{
@@ -86,6 +94,7 @@ export function SevioProvider({
         advertisements,
         setAdvertisements,
         debugEnabled,
+        refreshZone
       }}
     >
       {children}

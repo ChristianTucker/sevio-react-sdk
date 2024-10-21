@@ -1,6 +1,6 @@
 {
   "name": "sevio-react-sdk",
-  "version": "0.1.13",
+  "version": "0.1.15",
   "description": "A 3rd-party react sdk for integrating Sevio advertisements.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
