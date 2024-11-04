@@ -22,11 +22,15 @@ export function SevioProvider({
 
   // WHENEVER ADVERTISEMENTS CHANGE, PUSH A NEW CONFIG TO SEVIO.
   useEffect(() => {
-    if(!initialized) return;
+    if(!initialized) {
+      console.log('[DEBUG]: Deferring state updates until Sevioads is initialized');
+      return;
+    }
+
     const placements = advertisements.map(advertisement => ({ ...advertisement, inventoryId, accountId }))
-
-    console.log('Initialized', initialized, 'Sevioads', window.sevioads);
-
+    if(debugEnabled) {
+      console.log('[DEBUG]: Calling sevioads.push with placements:', placements);
+    }
     window.sevioads.push(placements);
   }, [initialized, advertisements]);
 

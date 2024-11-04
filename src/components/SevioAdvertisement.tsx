@@ -11,6 +11,7 @@ export function SevioAdvertisement({
   style, className
 }: PropsWithChildren<SevioAdvertisement & { style?: any, className?: string }>) {
   const { initialized, accountId, inventoryId, debugEnabled, setAdvertisements } = useSevio();
+
   useEffect(() => {
     if(!debugEnabled) return;
     console.log(`[DEBUG]: SevioAdvertisement initialization set to (${initialized}) for zone (${zone})`)
@@ -21,11 +22,6 @@ export function SevioAdvertisement({
     if (!initialized) return;
 
     // SEVIO LOADER HAS BEEN INITIALIZED, SO WE CAN UPDATE THE ADVERTISEMENTS STATE
-    if (debugEnabled)
-      console.log(
-        '[DEBUG]: Sevio initialization detected in mounted Advertisement component - You may see this more than once if you have multiple mounted components'
-      );
-
     // CREATE THE PLACEMENT
     const placement: SevioAdvertisement = {
       adType,
@@ -50,8 +46,10 @@ export function SevioAdvertisement({
 
   // RENDER EMPTY COMPONENT WITH REQUIRED PROPERTIES TO BE PICKED UP BY THE SEVIO LOADER.
   return (
-    <div className={`sevioads ${className}`} data-zone={zone} style={style}>
-      {children}
+    <div className={className} style={style}>
+      <div className={"sevioads"} data-zone={zone}>
+        {children}
+      </div>
     </div>
   );
 }
